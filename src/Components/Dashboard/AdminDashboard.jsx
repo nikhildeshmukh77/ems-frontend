@@ -3,11 +3,11 @@ import Header  from '../others/Header'
 import CreateTasks from '../others/CreateTasks'
 import AllTasks from '../others/AllTasks'
 
-const AdminDashboard = () => (
+const AdminDashboard = ({data}) => (
     <div className='h-screen w-full p-7 '>
-        <Header />
-        <CreateTasks/>
-        <AllTasks/>
+        <Header data = {data} />
+        <CreateTasks data = {data}/>
+        <AllTasks data = {data}/>
     </div>
 )
 
