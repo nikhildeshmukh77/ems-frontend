@@ -5,6 +5,7 @@ import EmpolyeeDashboard from './Components/Dashboard/EmpolyeeDashboard'
 import AdminDashboard from './Components/Dashboard/AdminDashboard'
 import { getLocalStorage, setLocalStorage } from './utils/localStorage'
 import { AuthContext } from './context/AuthProvider'
+import { data } from 'autoprefixer'
 function App() {
 
   // useEffect(() => {
@@ -16,20 +17,24 @@ function App() {
   const [loggedInUserData, setLoggedInUserData] = useState(null)
   const authData = useContext(AuthContext);
 
-  console.log(authData);
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    if(loggedInUser){
+      const userData = JSON.parse(loggedInUser);
+      setUser(userData.role);
+      console.log(userData.role);
+      setLoggedInUserData(userData.data);
+    } 
+  })
 
   useEffect(() => {
     const loggedInUser = localStorage.getItem("loggedInUser")
   }, [authData])
 
-  console.log("user", user);
-  console.log("data", loggedInUserData);
-
-  console.log(authData);
 
   const handleLogin = (email, password) => {
     console.log(email, password)
-    if (authData) {
+    if (authData && authData.admin.find((e) => e.email == email && e.password == password)) {
       
       const add = authData.admin.find((e) => e.email == email && e.password == password)
       if(add){
@@ -42,11 +47,10 @@ function App() {
       const employee = authData.employees.find((e) => e.email == email && e.password == password)
       if (employee) {
         setUser('employee')
-        console.log("data set");
         setLoggedInUserData(employee);
         localStorage.setItem('loggedInUser', JSON.stringify({ role: 'employee' }))
       }
-      localStorage.setItem('loggedInUser', JSON.stringify({ role: 'employee' }))
+      localStorage.setItem('loggedInUser', JSON.stringify({ role: 'employee', data : employee }))
     } else {
       alert("Invalid")
     }
